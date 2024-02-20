@@ -62,7 +62,7 @@ fn sanitize_filename(name: &str) -> String {
 #[tokio::main]
 async fn main() {
     let save = warp::post()
-        .and(warp::path("save"))
+        .and(warp::path("book"))
         .and(warp::body::json())
         .and_then(|book: Book| async move {
             save_book(&book).await
@@ -71,7 +71,7 @@ async fn main() {
         });
 
     let get = warp::get()
-        .and(warp::path("get"))
+        .and(warp::path("book"))
         .and(warp::path::param())
         .and_then(|name: String| async move {
             get_book(&name).await
@@ -80,7 +80,7 @@ async fn main() {
         });
 
     let delete = warp::delete()
-        .and(warp::path("delete"))
+        .and(warp::path("book"))
         .and(warp::path::param())
         .and_then(|name: String| async move {
             delete_book(&name).await
