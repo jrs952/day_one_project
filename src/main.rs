@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use chrono::NaiveDate;
 use warp::{reply, Reply, Filter, reject, Rejection, http::StatusCode};
 use std::fs;
-use tokio::io::{AsyncWriteExt, AsyncReadExt};
+use tokio::io::AsyncWriteExt;
 
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -39,10 +39,8 @@ async fn save_book(book: &Book) -> Result<(), std::io::Error> {
 }
 
 async fn get_book(name: &str) -> Result<Book, std::io::Error> {
-    let file_name = format!("./books/{}.json",sanitize_filename(name));
-    let mut file = tokio::fs::File::open(file_name).await?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).await?;
+    let file_name = format!("./books/{}.json",sanitize_filename(name));    
+    let contents = tokio::fs::read_to_string(file_name).await?;    
     let book: Book = serde_json::from_str(&contents)?;
     Ok(book)
 }
